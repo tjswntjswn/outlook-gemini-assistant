@@ -1,129 +1,127 @@
 import streamlit as st
-import time
-
-# 페이지 설정
-st.set_page_config(page_title="AI Outlook Design Preview", page_icon="🎨", layout="wide")
+from datetime import datetime
 
 # ==========================================
-# [사이드바]
+# [기본 설정] 페이지 및 데이터
 # ==========================================
+st.set_page_config(page_title="Outlook Style AI", page_icon="📧", layout="wide")
+
+# 더미 데이터
+dummy_emails = [
+    {"id": 1, "subject": "[긴급] 2025년 상반기 개발 로드맵 수정 요청", "sender": "김철수 팀장", "time": "10:30", "category": "업무", "priority": "High", "summary": "로드맵 수정 및 내일 오전 회신 요청.", "body": "팀장입니다. 어제 회의 결과 반영하여..."},
+    {"id": 2, "subject": "AWS EC2 Scheduled Maintenance Notification", "sender": "AWS Support", "time": "09:15", "category": "뉴스/알림", "priority": "Medium", "summary": "EC2 인스턴스 정기 점검 알림.", "body": "Hello, We have scheduled maintenance..."},
+    {"id": 3, "subject": "(광고) 연말 맞이 50% 할인 쿠폰", "sender": "쿠팡", "time": "08:00", "category": "광고", "priority": "Low", "summary": "할인 쿠폰 광고.", "body": "고객님만을 위한 특별한 혜택..."},
+    {"id": 4, "subject": "주간 업무 보고 제출 부탁드립니다.", "sender": "이영희 대리", "time": "어제", "category": "업무", "priority": "Medium", "summary": "금주 주간 업무 보고 작성 요청.", "body": "다들 고생 많으십니다. 이번 주 업무 보고..."},
+    {"id": 5, "subject": "사내 시스템 점검 안내 (12/20)", "sender": "IT 지원팀", "time": "어제", "category": "사내공지", "priority": "Low", "summary": "12월 20일 사내 시스템 점검 예정.", "body": "안정적인 서비스 제공을 위해..."}
+]
+
+# ==========================================
+# [핵심 로직] Session State (선택 상태 기억)
+# ==========================================
+if 'selected_email_index' not in st.session_state:
+    st.session_state.selected_email_index = None 
+
+def select_email(index):
+    st.session_state.selected_email_index = index
+
+# ==========================================
+# [UI 구조] 3단 레이아웃
+# ==========================================
+
+# 1. [좌측 패널] 사이드바
 with st.sidebar:
-    st.header("⚙️ 설정")
-    st.text_input("Gemini API Key", type="password", placeholder="디자인 미리보기 모드입니다")
-    st.slider("검색 시간 범위(시간)", 1, 72, 24)
-    st.info("💡 현재는 '디자인 미리보기' 모드이므로 실제 메일을 가져오지 않습니다.")
+    st.header("🗂️ 폴더")
+    st.button("📥 받은 편지함 (5)", use_container_width=True, type="primary")
+    st.button("📤 보낸 편지함", use_container_width=True)
+    st.button("📝 임시 보관함", use_container_width=True)
+    
     st.divider()
-    st.caption("Developed by You")
-
-# ==========================================
-# [메인 화면]
-# ==========================================
-st.title("📧 AI Outlook Assistant (Preview)")
-st.markdown("##### 🚀 AI가 당신의 메일함을 정리하고 있습니다.")
-
-# 버튼 스타일
-if st.button("🔄 메일 가져오기 및 분석 시작", type="primary"):
     
-    # 가짜 로딩 효과
-    with st.spinner('Outlook 메일 스캔 중...'):
-        time.sleep(0.5)
-    
-    # 진행률 표시
-    progress_bar = st.progress(0)
-    for i in range(100):
-        time.sleep(0.005)
-        progress_bar.progress(i + 1)
-    
-    st.success("분석이 완료되었습니다!")
+    st.header("🔍 검색 및 필터")
+    st.date_input("날짜", datetime.now())
+    categories = ["전체"] + sorted(list(set(e['category'] for e in dummy_emails)))
+    selected_category = st.radio("카테고리", categories)
 
-    # ==========================================
-    # [가짜 데이터 - UI 확인용]
-    # ==========================================
-    dummy_emails = [
-        {
-            "sender": "김철수 팀장",
-            "subject": "[긴급] 2025년 상반기 개발 로드맵 수정 요청",
-            "time": "2025-12-16 09:30",
-            "preview": "안녕하세요, 김팀장입니다. 지난 회의에서 논의된 사항을 바탕으로 로드맵 수정이 필요합니다...",
-            "ai_result": {
-                "summary": "지난 회의 내용을 반영하여 상반기 개발 로드맵을 수정하고 내일 오전까지 재송부 요청함.",
-                "category": "업무",
-                "priority": "High",
-                "todos": ["로드맵 수정안 작성", "내일 오전 10시 전까지 메일 회신"],
-                "translation": None
-            }
-        },
-        {
-            "sender": "John Doe (AWS)",
-            "subject": "AWS Notification - EC2 Instance Scheduled Maintenance",
-            "time": "2025-12-16 08:15",
-            "preview": "Hello, This is a notification regarding your EC2 instances in ap-northeast-2 region...",
-            "ai_result": {
-                "summary": "ap-northeast-2 리전의 EC2 인스턴스 정기 점검이 예정되어 있음. 리부팅 필요.",
-                "category": "뉴스/알림",
-                "priority": "Medium",
-                "todos": ["서버 상태 확인", "점검 시간 공지"],
-                "translation": "귀하의 ap-northeast-2 리전 EC2 인스턴스에 대한 유지 보수 작업 알림입니다."
-            }
-        },
-        {
-            "sender": "쿠팡",
-            "subject": "(광고) 이번 주 특가 상품을 놓치지 마세요!",
-            "time": "2025-12-15 18:00",
-            "preview": "고객님을 위한 특별한 혜택! 최대 50% 할인 쿠폰이 도착했습니다...",
-            "ai_result": {
-                "summary": "주간 특가 상품 및 50% 할인 쿠폰 안내 광고 메일.",
-                "category": "광고",
-                "priority": "Low",
-                "todos": [],
-                "translation": None
-            }
-        }
-    ]
+col_list, col_read = st.columns([2, 3])
 
-    # ==========================================
-    # [카드 UI 렌더링]
-    # ==========================================
-    for idx, email in enumerate(dummy_emails):
-        ai = email['ai_result']
+# 2. [중간 패널] 메일 목록
+with col_list:
+    st.subheader("받은 편지함")
+    filtered_emails = dummy_emails if selected_category == "전체" else [e for e in dummy_emails if e['category'] == selected_category]
+    
+    st.markdown("---")
+    
+    if not filtered_emails:
+        st.info("표시할 메일이 없습니다.")
+    else:
+        # [수정됨] 오타 수정 (unsafe_allow_allow_html -> unsafe_allow_html)
+        st.markdown("""
+            <style>
+            div.stButton > button:first-child {
+                text-align: left; 
+                border-radius: 0px;
+                border: none;
+                border-bottom: 1px solid #f0f2f6;
+                padding: 10px;
+            }
+            </style>
+        """, unsafe_allow_html=True)
+
+        for i, mail in enumerate(filtered_emails):
+            emoji = "🔴" if mail['priority'] == "High" else "🟠" if mail['priority'] == "Medium" else "🟢"
+            button_label = f"{emoji} **{mail['sender']}** \n {mail['subject']} \n 🕒 {mail['time']}"
+            
+            st.button(
+                button_label, 
+                key=f"mail_btn_{i}", 
+                use_container_width=True,
+                on_click=select_email,
+                args=(i,)
+            )
+
+# 3. [우측 패널] 읽기 창
+with col_read:
+    current_index = st.session_state.selected_email_index
+    
+    if current_index is None or current_index >= len(filtered_emails):
+        st.markdown(
+            """
+            <div style='text-align: center; padding: 50px; color: gray;'>
+                <h1>📧</h1>
+                <h3>메일을 선택하여 내용을 확인하세요.</h3>
+                <p>AI 요약과 할 일이 이곳에 표시됩니다.</p>
+            </div>
+            """, unsafe_allow_html=True
+        )
+    else:
+        selected_mail = filtered_emails[current_index]
         
-        # Expander: 접었다 폈다 할 수 있는 카드
-        with st.expander(f"[{email['sender']}] {email['subject']}", expanded=True):
-            
-            col1, col2 = st.columns([1, 2])
-            
-            # 왼쪽: 메일 기본 정보
-            with col1:
-                st.caption(f"📅 수신: {email['time']}")
-                st.text_area("메일 원문", email['preview'], height=120, disabled=True, key=f"txt_{idx}")
-            
-            # 오른쪽: AI 분석 결과
-            with col2:
-                # 1. 뱃지 및 카테고리 헤더
-                if ai['priority'] == 'High':
-                    badge_color = "red"
-                    emoji = "🔴"
-                elif ai['priority'] == 'Medium':
-                    badge_color = "orange"
-                    emoji = "🟠"
-                else:
-                    badge_color = "green"
-                    emoji = "🟢"
-                
-                st.markdown(f"### {emoji} :{badge_color}[**{ai['priority']} Priority**] &nbsp; | &nbsp; 📂 {ai['category']}")
-                
-                # 2. 요약 박스
-                st.info(f"**요약:** {ai['summary']}")
-                
-                # 3. 할 일 (체크박스)
-                if ai['todos']:
-                    st.write("**✅ Action Items:**")
-                    for todo in ai['todos']:
-                        st.checkbox(todo, key=f"todo_{idx}_{todo}")
-                
-                # 4. 번역 (채팅 UI 느낌)
-                if ai['translation']:
-                    with st.chat_message("assistant", avatar="🤖"):
-                        st.write(f"**번역:** {ai['translation']}")
+        # [수정됨] 오타 수정 (unsafe_allow_allow_html -> unsafe_allow_html)
+        st.markdown(
+            f"""
+            <div style='background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;'>
+                <h2 style='margin:0; color: #0078d4;'>{selected_mail['subject']}</h2>
+                <p style='margin: 10px 0 5px 0;'><b>보낸사람:</b> {selected_mail['sender']}</p>
+                <p style='margin:0; color: gray; font-size: 0.9em;'>수신: {selected_mail['time']}</p>
+                <div style='margin-top: 15px;'>
+                    <span style='background-color: #e1dfdd; padding: 4px 8px; border-radius: 4px; font-size: 0.8em;'>{selected_mail['category']}</span>
+                    <span style='background-color: {'#ffcccc' if selected_mail['priority'] == 'High' else '#ffe5cc'}; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; margin-left: 5px;'>중요도: {selected_mail['priority']}</span>
+                </div>
+            </div>
+            """, unsafe_allow_html=True
+        )
 
-    st.toast("모든 메일 분석이 완료되었습니다!", icon="🎉")
+        st.info(f"🤖 **AI 요약:** {selected_mail['summary']}", icon="📌")
+        
+        tab1, tab2 = st.tabs(["📄 메일 본문", "✅ 할 일(Action Items)"])
+        
+        with tab1:
+            st.write(selected_mail['body'])
+            st.write("---")
+            st.caption("이 메일은 AI 비서가 분석했습니다.")
+            
+        with tab2:
+            st.write("이 메일에서 추출된 할 일입니다.")
+            st.checkbox("메일 내용 확인 및 회신")
+            if selected_mail['priority'] == 'High':
+                 st.checkbox("팀장님께 보고", value=True)
