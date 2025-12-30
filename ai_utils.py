@@ -4,7 +4,7 @@ import json
 def configure_gemini(api_key):
     genai.configure(api_key=api_key)
 
-def analyze_email(email_content, model_name="gemini-1.5-flash"):
+def analyze_email(email_content, model_name="models/gemma-3-4b-it"):
     """
     Analyzes email content to provide summary, priority, and category.
     Returns a JSON object.
@@ -13,19 +13,19 @@ def analyze_email(email_content, model_name="gemini-1.5-flash"):
         model = genai.GenerativeModel(model_name)
         
         prompt = f"""
-        Analyze the following email content and provide:
-        1. A concise summary (max 2 sentences).
-        2. Priority level (High, Medium, Low) based on urgency and importance.
-        3. A category (e.g., Work, Personal, Newsletter, Spam, Finance, Social).
+        다음 이메일 내용을 분석해서 JSON 형식으로 응답해줘.
+        1. summary: 핵심 내용 1~2문장 요약 (한국어)
+        2. priority: 중요도 (High, Medium, Low 중 하나)
+        3. category: 분류 (업무, 개인, 뉴스레터, 쇼핑, 금융 중 하나)
         
-        Return the result strictly in valid JSON format like this:
+        응답은 반드시 아래 JSON 형식만 출력해:
         {{
             "summary": "...",
             "priority": "...",
             "category": "..."
         }}
         
-        Email Content:
+        이메일 내용:
         {email_content}
         """
         
