@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brief Mail 📝</title>
+    <!-- Use static path if running in Flask, otherwise relative for preview -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+    <style>
+        /* Fallback for local preview if Jinja fails */
+        @import url('styles.css'); 
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="logo">BRIEF MAIL</div>
+        <button class="menu-btn" aria-label="Menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+    </header>
+
+    <main class="container">
+        <div class="split-layout">
+            <div class="left-panel">
+                <div class="image-wrapper">
+                    <!-- Adjusted path for Flask static folder assumption, or relative for local -->
+                    <img src="{{ url_for('static', filename='images/hedgehog.png') }}" onerror="this.src='images/hedgehog.png'" alt="Brief Mail Mascot" class="mascot-img">
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="content-wrapper">
+                    <h1 class="headline">Gemini가 당신의 메일함을<br>간결하게 요약해드립니다.</h1>
+                    
+                    <p class="description">
+                        읽지 않은 수많은 이메일들, 중요한 내용만 골라서 보고 싶으신가요?
+                        Brief Mail은 Outlook과 Gmail을 연동하여 AI가 핵심만 쏙쏙 뽑아 요약해드립니다.
+                        지금 바로 시작해보세요!
+                    </p>
+
+                    <!-- Flash Messages -->
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="error-message">
+                        {% for message in messages %}
+                            <div>🚨 {{ message }}</div>
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                    {% endwith %}
+
+                    <div class="login-box">
+                        <form action="/dashboard" method="POST">
+                            <!-- Server Selection -->
+                            <div class="input-group">
+                                <label class="label-with-tooltip">메일 서버</label>
+                                <select name="server">
+                                    <option value="gmail">Gmail (IMAP)</option>
+                                    <option value="outlook">Outlook (Office 365)</option>
+                                </select>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="input-group">
+                                <label class="label-with-tooltip">아이디 (Email)</label>
+                                <input type="email" name="email" placeholder="example@email.com" required>
+                            </div>
+
+                            <!-- Password with Tooltip -->
+                            <div class="input-group">
+                                <label class="label-with-tooltip">
+                                    비밀번호 (App Pw)
+                                    <div class="tooltip">
+                                        <span class="question-icon">?</span>
+                                        <span class="tooltip-text">
+                                            <strong>💡 앱 비밀번호란?</strong><br>
+                                            이메일 계정의 실제 비밀번호가 아니라,<br>
+                                            외부 앱 접속용 전용 암호입니다.<br><br>
+                                            <b>[Outlook]</b><br>
+                                            MS 계정 > 보안 > 고급 보안 옵션 > 앱 암호<br><br>
+                                            <b>[Gmail]</b><br>
+                                            구글 계정 > 보안 > 2단계 인증 > 앱 비밀번호
+                                        </span>
+                                    </div>
+                                </label>
+                                <input type="password" name="password" placeholder="비밀번호 입력" required>
+                            </div>
+
+                            <!-- API Key with Tooltip -->
+                            <div class="input-group">
+                                <label class="label-with-tooltip">
+                                    Gemini API Key
+                                    <div class="tooltip">
+                                        <span class="question-icon">?</span>
+                                        <span class="tooltip-text">
+                                            <strong>✨ API Key 발급 방법</strong><br>
+                                            Gemini를 사용하려면 키가 필요해요.<br>
+                                            (무료로 발급 가능합니다!)<br><br>
+                                            1. <b>Google AI Studio</b> 접속<br>
+                                            (aistudio.google.com)<br>
+                                            2. 구글 계정으로 로그인<br>
+                                            3. 좌측 상단 <b>Get API key</b> 클릭<br>
+                                            4. <b>Create API key</b> 버튼 누르기
+                                        </span>
+                                    </div>
+                                </label>
+                                <input type="password" name="apikey" placeholder="API Key 입력" required>
+                            </div>
+
+                            <button type="submit" class="submit-btn" style="grid-column: 1 / -1; margin-top: 1rem;">LOGIN</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

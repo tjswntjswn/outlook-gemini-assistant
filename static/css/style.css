@@ -1,0 +1,372 @@
+:root {
+    --primary-orange: #fb7800;
+    --text-black: #050505;
+    --text-gray: #333333;
+    --bg-gray: #f5f5f5;
+    --panel-gray: #e6e6e6;
+    --border-color: #000000;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+    background-color: var(--bg-gray);
+    color: var(--text-black);
+    line-height: 1.5;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* Header */
+.site-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: var(--bg-gray);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.logo {
+    font-weight: 900;
+    font-size: 1.5rem;
+    letter-spacing: -0.5px;
+}
+
+.menu-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+/* Layout */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.split-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-gray);
+}
+
+/* Left Panel - Image */
+.left-panel {
+    background-color: var(--panel-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    border-right: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+.image-wrapper {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white; /* Optional: if the image has transparency and needs a box */
+    border: 1px solid var(--border-color); /* The box around the hedgehog in the design */
+}
+
+.mascot-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* Right Panel - Content */
+.right-panel {
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.content-wrapper {
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+.headline {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.3;
+    margin-bottom: 1.5rem;
+    word-break: keep-all;
+}
+
+.description {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-gray);
+    word-break: keep-all;
+}
+
+.notice {
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+    font-weight: 700;
+}
+
+.highlight {
+    text-decoration: underline;
+    text-decoration-color: var(--primary-orange);
+    text-decoration-thickness: 3px;
+    text-underline-offset: 3px;
+}
+
+/* Form Styles */
+.login-box {
+    background-color: var(--bg-gray);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+}
+
+form {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    margin-bottom: 1rem;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    grid-column: 1 / 2;
+}
+
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    font-size: 1rem;
+    background: white;
+    font-family: inherit;
+}
+
+input:focus {
+    outline: 2px solid var(--primary-orange);
+    border-color: var(--primary-orange);
+}
+
+.submit-btn {
+    grid-column: 2 / 3;
+    grid-row: 1 / 3; /* Spans both input rows */
+    background-color: var(--primary-orange);
+    color: var(--text-black);
+    border: 1px solid var(--border-color);
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+}
+
+.submit-btn:hover {
+    background-color: #e66a00;
+}
+
+.form-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.signup-link {
+    color: var(--text-black);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.signup-link:hover {
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .split-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .left-panel {
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        padding: 1.5rem;
+    }
+    
+    .right-panel {
+        padding: 2rem;
+    }
+
+    .headline {
+        font-size: 2rem;
+    }
+    
+     form {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+    }
+    
+    .input-group {
+        grid-column: 1 / -1;
+    }
+    
+    .submit-btn {
+        grid-column: 1 / -1;
+        grid-row: auto;
+        padding: 1rem;
+        margin-top: 0.5rem;
+    }
+}
+
+/* Extras for Brief Mail */
+select {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    font-size: 1rem;
+    background: white;
+    font-family: inherit;
+    appearance: none; /* Remove default arrow */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+}
+
+select:focus {
+    outline: 2px solid var(--primary-orange);
+    border-color: var(--primary-orange);
+}
+
+.label-with-tooltip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-flex;
+    cursor: pointer;
+}
+
+.question-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: var(--text-gray);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    width: 280px;
+    background-color: #333;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 12px;
+    position: absolute;
+    z-index: 10;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tooltip-text strong {
+    color: var(--primary-orange);
+    display: block;
+    margin-bottom: 4px;
+}
+
+.error-message {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    border: 1px solid #ef9a9a;
+}
+
+.logout-btn {
+    background-color: white;
+    color: var(--text-black);
+    border: 1px solid var(--border-color);
+    padding: 0.8rem 1.5rem;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
+}
+
+.logout-btn:hover {
+    background-color: #fee2e2; /* Light red hover */
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 rgba(0,0,0,0.15);
+}
